@@ -51,18 +51,23 @@ app.get('/play/:hash', (req, res) => {
         res.send(`${user.name}'s timer was not started.`);
       }
     } else {
-      // 세 번째 요청 이후: 타이머를 다시 시작하지 않음
-      if (user.timer && user.timer.duration !== null) {
-        res.send(
-          `${user.name}'s timer has already stopped. Total duration: ${user.timer.duration} seconds.`
-        );
-      } else {
-        res.send(`${user.name}'s timer is not active.`);
-      }
-    }
+if (user) {
+  if (user.timer && user.timer.duration !== null) {
+    // 타이머가 이미 종료된 경우
+    res.send(
+      `${user.name}'s timer has already stopped. Total duration: ${user.timer.duration} seconds.`
+    );
+  } else if (user.timer && user.timer.duration === null) {
+    // 타이머가 진행 중인 경우
+    res.send(`${user.name}'s timer is currently running.`);
   } else {
-    res.send('Hash not found.');
+    // 타이머가 없는 경우
+    res.send(`${user.name} has no active timer.`);
   }
+} else {
+  // Hash가 없는 경우
+  res.send('Hash not found.');
+}
 });
 
 app.get('/users', (req, res) => {
