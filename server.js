@@ -17,7 +17,7 @@ app.get('/account/:name', (req, res) => {
       .slice(0, 10); // 처음 10자리만 사용
   }
   const hash = generateHash(name);
-  const link = `https://port-0-test-m54xtu0t888914df.sel4.cloudtype.app/play/${hash}`;
+  const link = `port-0-test-m54xtu0t888914df.sel4.cloudtype.app/play/${hash}`;
 
   users.push({ name, hash, timer: null, checkCount: 0 });
 
