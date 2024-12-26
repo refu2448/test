@@ -28,47 +28,47 @@ app.get('/play/:hash', (req, res) => {
   // 요청 경로에서 해시 값을 가져옵니다.
   const { hash } = req.params; // users 배열에서 입력된 해시와 일치하는 사용자를 찾습니다.
   const user = users.find((user) => user.hash === hash);
+});
 
-  if (user) {
-    // 요청이 들어올 때마다 대조 횟수를 증가시킵니다.
-    user.checkCount += 1;
-
-    if (user.checkCount === 1) {
-      // 첫 번째 요청: 타이머 시작
-      user.timer = { start: Date.now(), duration: null }; // 타이머 시작 시간 기록
-      res.send(`${user.name}'s timer started.`);
-    } else if (user.checkCount === 2) {
-      // 두 번째 요청: 타이머 정지 및 경과 시간 저장
-      if (user.timer && user.timer.start) {
-        const endTime = Date.now(); // 현재 시간
-        const duration = (endTime - user.timer.start) / 1000; // 경과 시간 계산 (초 단위)
-        user.timer.duration = duration; // 경과 시간 저장
-        user.timer.start = null; // 타이머 시작 시간 초기화
-        res.send(
-          `${user.name}'s timer stopped. Duration: ${duration} seconds.`
-        );
-      } else {
-        res.send(`${user.name}'s timer was not started.`);
-      }
-    } else {
 if (user) {
-  if (user.timer && user.timer.duration !== null) {
-    // 타이머가 이미 종료된 경우
-    res.send(
-      `${user.name}'s timer has already stopped. Total duration: ${user.timer.duration} seconds.`
-    );
-  } else if (user.timer && user.timer.duration === null) {
-    // 타이머가 진행 중인 경우
-    res.send(`${user.name}'s timer is currently running.`);
+  // 요청이 들어올 때마다 대조 횟수를 증가시킵니다.
+  user.checkCount += 1;
+}
+
+if (user.checkCount === 1) {
+  // 첫 번째 요청: 타이머 시작
+  user.timer = { start: Date.now(), duration: null }; // 타이머 시작 시간 기록
+  res.send(`${user.name}'s timer started.`);
+} else if (user.checkCount === 2) {
+  // 두 번째 요청: 타이머 정지 및 경과 시간 저장
+  if (user.timer && user.timer.start) {
+    const endTime = Date.now(); // 현재 시간
+    const duration = (endTime - user.timer.start) / 1000; // 경과 시간 계산 (초 단위)
+    user.timer.duration = duration; // 경과 시간 저장
+    user.timer.start = null; // 타이머 시작 시간 초기화
+    res.send(`${user.name}'s timer stopped. Duration: ${duration} seconds.`);
   } else {
-    // 타이머가 없는 경우
-    res.send(`${user.name} has no active timer.`);
+    res.send(`${user.name}'s timer was not started.`);
   }
 } else {
-  // Hash가 없는 경우
-  res.send('Hash not found.');
+  if (user) {
+    if (user.timer && user.timer.duration !== null) {
+      // 타이머가 이미 종료된 경우
+      res.send(
+        `${user.name}'s timer has already stopped. Total duration: ${user.timer.duration} seconds.`
+      );
+    } else if (user.timer && user.timer.duration === null) {
+      // 타이머가 진행 중인 경우
+      res.send(`${user.name}'s timer is currently running.`);
+    } else {
+      // 타이머가 없는 경우
+      res.send(`${user.name} has no active timer.`);
+    }
+  } else {
+    // Hash가 없는 경우
+    res.send('Hash not found.');
+  }
 }
-});
 
 app.get('/users', (req, res) => {
   res.json(users);
